@@ -43,7 +43,7 @@ def display_map(filtered_df, geojson_data):
 
     geojson_data = add_produksi_to_geojson(geojson_data, filtered_df)
 
-    map_ = folium.Map(location=[-9.601258, 121.800591], zoom_start=7)
+    map_ = folium.Map(location=[-9.6, 121.8], zoom_start=7, tiles=None, control_scale=True)
 
     def style_function(feature):
         regency = feature["properties"]["WADMKK"]
