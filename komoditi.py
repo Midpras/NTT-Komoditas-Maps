@@ -4,11 +4,14 @@ import folium
 from streamlit_folium import st_folium
 import json
 
+
 st.set_page_config(page_title="Komoditi di Nusa Tenggara Timur", layout="wide")
 
+# App Title
 APP_TITLE = "Komoditi di Nusa Tenggara Timur"
 APP_SUB_TITLE = "Visualisasi Komoditas per Kabupaten di NTT"
 
+# Load Data
 @st.cache_data
 def load_data():
     return pd.read_excel("data/Komoditi NTT.xlsx")
@@ -17,12 +20,14 @@ def load_data():
 def load_geojson():
     with open("data/geojson/NTT.geojson", "r", encoding="utf-8") as f:
         geojson_raw = json.load(f)
-    return geojson_raw  # Ensure it's stored as a Python object
+    return geojson_raw 
 
+# Display Filters
 def display_filters(df):
     commodity_list = sorted(df["Komoditi"].unique())
     return st.selectbox("Pilih Komoditi", commodity_list)
 
+# Add Produksi data to GeoJSON features
 def add_produksi_to_geojson(geojson_data, filtered_df):
     for feature in geojson_data["features"]:
         regency = feature["properties"]["WADMKK"]
@@ -30,9 +35,9 @@ def add_produksi_to_geojson(geojson_data, filtered_df):
         if len(produksi) > 0:
             feature["properties"]["Produksi"] = int(produksi[0])
         else:
-            feature["properties"]["Produksi"] = "N/A" 
+            feature["properties"]["Produksi"] = "N/A"  
+    return geojson_data
 
-# Display Map
 def display_map(filtered_df, geojson_data):
     selected_regions = filtered_df["Kabupaten"].unique()
 
@@ -50,8 +55,8 @@ def display_map(filtered_df, geojson_data):
         geojson_data,
         name="NTT Regencies",
         tooltip=folium.GeoJsonTooltip(
-            fields=["WADMKK", "Produksi"],  # Include Produksi in the tooltip
-            aliases=["Kabupaten:", "Produksi:"],  # Labels for the tooltip
+            fields=["WADMKK", "Produksi"],  
+            aliases=["Kabupaten:", "Produksi:"], 
             localize=True,
             sticky=True
         ),
