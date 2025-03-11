@@ -7,11 +7,9 @@ import json
 
 st.set_page_config(page_title="Komoditi di Nusa Tenggara Timur", layout="wide")
 
-# App Title
 APP_TITLE = "Komoditi di Nusa Tenggara Timur"
 APP_SUB_TITLE = "Visualisasi Komoditas per Kabupaten di NTT"
 
-# Load Data
 @st.cache_data
 def load_data():
     return pd.read_excel("data/Komoditi NTT.xlsx")
@@ -22,12 +20,10 @@ def load_geojson():
         geojson_raw = json.load(f)
     return geojson_raw 
 
-# Display Filters
 def display_filters(df):
     commodity_list = sorted(df["Komoditi"].unique())
     return st.selectbox("Pilih Komoditi", commodity_list)
 
-# Add Produksi data to GeoJSON features
 def add_produksi_to_geojson(geojson_data, filtered_df):
     for feature in geojson_data["features"]:
         regency = feature["properties"]["WADMKK"]
@@ -43,7 +39,7 @@ def display_map(filtered_df, geojson_data):
 
     geojson_data = add_produksi_to_geojson(geojson_data, filtered_df)
 
-    map_ = folium.Map(location=[-9.6, 121.8], zoom_start=7, tiles=None, control_scale=True, prefer_canvas=True)
+    map_ = folium.Map(location=[-9.6, 121.8], zoom_start=7, tiles="Cartodb Positron", control_scale=True, prefer_canvas=True)
 
     def style_function(feature):
         regency = feature["properties"]["WADMKK"]
@@ -58,7 +54,7 @@ def display_map(filtered_df, geojson_data):
             fields=["WADMKK", "Produksi"],  
             aliases=["Kabupaten:", "Produksi:"], 
             localize=True,
-            sticky=True
+            sticky=True,
         ),
         style_function=style_function
     ).add_to(map_)
