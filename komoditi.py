@@ -63,7 +63,7 @@ def display_map(filtered_df, geojson_data):
         style_function=style_function
     ).add_to(map_)
 
-    st_folium(map_, width=700, height=500)
+    st_folium(map_, width=700, height=500, returned_objects=[])
 
 def main():
     st.title(APP_TITLE)
